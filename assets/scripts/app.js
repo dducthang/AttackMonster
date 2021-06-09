@@ -6,7 +6,31 @@ const HEAL_VALUE = 20;
 let maxLife = 100;
 let currentMonsterHealth = maxLife;
 let currentPlayerHealth = maxLife;
+let hasBonusLife = true;
+let initialHealth;
 adjustHealthBars(maxLife);
+
+function endRound()
+{
+    
+    if(currentPlayerHealth > 0 && currentMonsterHealth <=0 )
+        alert("YOU WON!!!");
+    else if(currentPlayerHealth <=0)
+    {
+        if(hasBonusLife)
+        {
+            removeBonusLife();
+            alert("bonus life saved you");
+            currentPlayerHealth = initialHealth;
+            setPlayerHealth(initialHealth)
+        }
+        else if(currentMonsterHealth>0)
+            alert("xxxxx YOU LOST xxxxx");
+        else if(currentMonsterHealth==0)
+            alert("xxxxx WE HAVE A DRAW xxxxx");
+    }
+    
+}
 
 function attackMode(mode)
 {
@@ -21,15 +45,9 @@ function attackMode(mode)
     let monsterDamage = dealMonsterDamage(maxDamage);
     currentMonsterHealth -= monsterDamage;
     let playerDamage = dealPlayerDamage(MONSTER_ATTACK_VALUE);
+    initialHealth = currentPlayerHealth;
     currentPlayerHealth -= playerDamage;
-
-    if(currentPlayerHealth > 0 && currentMonsterHealth <=0 )
-        alert("YOU WON!!!");
-    else if(currentPlayerHealth <=0 && currentMonsterHealth>0)
-        alert("xxxxx YOU LOST xxxxx");
-    else if(currentPlayerHealth ==0 && currentMonsterHealth == 0)
-        alert("xxxxx WE HAVE A DRAW xxxxx");
-
+    endRound();
 }
 
 function attackHandler()
@@ -49,7 +67,7 @@ function healHandler()
         healValue =maxLife-currentPlayerHealth;
     else
         healValue= HEAL_VALUE;
-        
+
     increasePlayerHealth(healValue);
     currentPlayerHealth+=healValue;
 }
